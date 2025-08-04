@@ -1,0 +1,44 @@
+[
+    {
+        "audit_case_id": "1",
+        "risk_point":"资料提交不完整，造成施工费被核减",
+        "risk_point_description":"资料提交不完整，造成施工费被核减，少享受政府补助，利润降低",
+        "determination_parameter":"/",
+        "middle_table_name":"dwd_prj_sjtxjs_project_dudgetcost  项目预算成本信息 "
+    },
+    {
+        "audit_case_id": "2",
+        "risk_point":"迁改申请资料不完整、缺件无法限期内补齐。",
+        "risk_point_description":"迁改申请资料不完整、缺件无法限期内补齐，导致少享受甚至无法享受政府补助。",
+        "determination_parameter":"/",
+        "middle_table_name":"dwd_fin_zcjzmxb  资产价值明细信息表 "
+    },
+    {
+        "audit_case_id": "3",
+        "risk_point":"迁改协议签订不及时、未经各部会签或审核。",
+        "risk_point_description":"迁改协议签订不及时、未经各部会签或审核",
+        "determination_parameter":"《电力设施迁改协议》（非系统参数）\n数字化法制企业建设平台《电力设施迁改协议》相关会签部门字段",
+        "middle_table_name":"dwd_prj_sjtxjs_project_dudgetcost  项目预算成本信息 "
+    },
+    {
+        "audit_case_id": "4",
+        "risk_point":"资料归档不及时，不完整导致决算价值依据不充分",
+        "risk_point_description":"资料归档不及时，不完整导致决算价值依据不充分",
+        "determination_parameter":"《迁改协议》（非系统参数）、《项目可研报告及批复文件》（非系统参数）、《项目计划下达文件》（非系统参数）等",
+        "middle_table_name":"dwd_prj_sjtxjs_project_dudgetcost  项目预算成本信息 "
+    },
+    {
+        "audit_case_id": "5",
+        "risk_point":"价值与实际投产偏离",
+        "risk_point_description":"账面价值与实际投产偏离",
+        "determination_parameter":"检查资产价值日是否在投产当月。如果资产价值日 ≠ 投产当月，则价值偏离",
+        "middle_table_name":"ods_erp_p00_sapsr3_proj(保存项目定义的数据：包括客户端项目定义等相关信息）\npro_dwh_erp_prd.ods_erp_p00_sapsr3_prps（WBS元素主数据）\npro_dwh_erp_prd.ods_erp_zltp_erp_bseg（会计核算凭证段）\npro_dwh_erp_prd.ods_erp_p00_sapsr3_bkpf（huijialema核算凭证标题）"
+    },
+    {
+        "audit_case_id": "6",
+        "risk_point":"转资异常",
+        "risk_point_description":"提前转资或者超前转资",
+        "determination_parameter":"1、转资凭证日期 < 工程投产日期。\n2、转资凭证日期 > 工程投产日期 + 30天。",
+        "middle_table_name":"ods_erp_p00_sapsr3_proj(保存项目定义的数据：包括客户端项目定义等相关信息）\npro_dwh_erp_prd.ods_erp_p00_sapsr3_prps（WBS元素主数据）\npro_dwh_erp_prd.ods_erp_zltp_erp_bseg（会计核算凭证段）\npro_dwh_erp_prd.ods_erp_p00_sapsr3_bkpf（huijialema核算凭证标题）\npro_dwh_erp_prd.ods_erp_zltp_erp_cdpos（更改凭证项目表）"
+    }
+]
