@@ -1,0 +1,41 @@
+{
+    "Chosen Processes": [
+        {
+            "name": "完工验收流程",
+            "description": "工程投产日期"
+        },
+        {
+            "name": "变更日志表(非流程)",
+            "description": "字段变更记录表(投产日期变更)"
+        },
+        {
+            "name": "完工验收流程",
+            "description": "完工验收报告(完工验收日期/投产日期)"
+        },
+        {
+            "name": "完工验收流程",
+            "description": "审定结算报告(审定结算日期、审定结算金额)"
+        }
+    ],
+    "Fields": {
+        "sql": [
+            {
+                "pro_dwh_erp_prd.ods_erp_p00_sapsr3_prps": [
+                    "usr08",
+                    "usr09",
+                    "tadat"
+                ]
+            },
+            {
+                "pro_dwh_erp_prd.ods_erp_zltp_erp_cdpos": [
+                    "fname",
+                    "value_new",
+                    "value_old"
+                ]
+            }
+        ],
+        "user": [
+            "审定结算报告(审定结算日期、审定结算金额)"
+        ]
+    }
+}
