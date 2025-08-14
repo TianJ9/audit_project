@@ -1,2 +1,1 @@
 # audit_project
-考虑到数据隐私性问题，删去了datasets文件夹和KnowledgeGraph.xlsx，二者均在压缩包中可以找到，运行时应放在KgInference文件夹中
