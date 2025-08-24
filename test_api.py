@@ -8,8 +8,8 @@ client = OpenAI(
 
 def model_gen(prompt):
     result = client.chat.completions.create(
-        model="deepseek/deepseek-r1-0528",
-        # model="deepseek/deepseek-chat-v3-0324",
+        # model="deepseek/deepseek-r1-0528",
+        model="deepseek/deepseek-chat-v3-0324",
         messages=[
             {"role": "system", "content": "你是一个专业的审计专家，擅长分析各种审计项目并进行异常排查。"},
             {"role": "user", "content": prompt}
