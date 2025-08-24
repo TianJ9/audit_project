@@ -18,7 +18,7 @@ from jinja2 import Template
 
 client = OpenAI(
     base_url="https://api.deepseek.com",
-    api_key="sk-8d51d6ac51a54945a02d7979ef2e9e8f",
+    api_key="",
 )
 
 model = "deepseek-reasoner"
