@@ -88,7 +88,8 @@ print(f"使用{model}模型演示中")
 
 # Step1 遍历1.1中的数据表，并
 def find_risk_rows(file_path, search_value):
-    print("取数Step1: 获取风险点对应描述、判定逻辑和判定参数")
+    # print("取数Step1: 获取风险点对应描述、判定逻辑和判定参数")
+    print("获取风险点对应描述、判定逻辑和判定参数")
     # 1. 读入文件
     wb = openpyxl.load_workbook(file_path)
     ws = wb.active
@@ -128,7 +129,8 @@ def find_risk_rows(file_path, search_value):
 
 # Step2 针对每个风险点，输出判别逻辑：针对每个风险点，拿什么字段和什么字段对比
 def choose_process(LOGIC):
-    print("取数Step2: 根据风险点描述与逻辑，找出需要比对的字段")
+    # print("取数Step2: 根据风险点描述与逻辑，找出需要比对的字段")
+    print("根据风险点描述与逻辑，找出需要比对的字段")
     PROMPT_TEMPLATE = '''
     你的任务是：根据给定的判定逻辑，给定需要判别的字段，如
     
@@ -159,7 +161,8 @@ def choose_process(LOGIC):
 # Step3 建立图，返回图和推理路径
 # NOTE 仅为演示进行的简化实现
 def infer_graph():
-    print("取数Step3: 读取数据并建立图谱")
+    # print("取数Step3: 读取数据并建立图谱")
+    # print("读取数据并建立图谱")
     # TABLE_NAMES = ["PRPS", "PROJ", "BKPF", "BSEG", "CDPOS"]
 
     def remove_chinese(text: str) -> str:
@@ -218,6 +221,30 @@ def infer_graph():
             continue
     print(f"result_dict: {result_dict}")
 
+    entities = []
+    relationships = []
+    # 1. 表实体
+    for table, fields in result_dict.items():
+        entities.append({
+            "name": table,
+            "type": "Table"
+        })
+        # 2. 字段实体 + 关系
+        for field in fields:
+            entities.append({
+                "name": field,
+                "type": "Field"
+            })
+            relationships.append({
+                "from_entity": table,
+                "to_entity": field,
+                "relationship": "has_field"
+            })
+
+    graph = {
+        "entities": entities,
+        "relationships": relationships
+    }
 
     # 创建图
     # G = nx.Graph()
@@ -245,11 +272,12 @@ def infer_graph():
     # plt.legend()
     # plt.axis("off")
     # plt.show()
-    return result_dict
+    return graph
 
 # Step4 通过直接取数，完成表格对应数据的映射，获取用于生成SQL的字段
 def find_fields_by_table(table_name, target_fields):
-    print("取数Step4: 根据源数据进行图谱推理，找到生成SQL所需参数")
+    # print("取数Step4: 根据源数据进行图谱推理，找到生成SQL所需参数")
+    print("根据源数据进行图谱推理，找到生成SQL所需参数")
     """
     file_path: Excel文件路径
     table_name: 要匹配的表名（第8列）
@@ -297,7 +325,8 @@ def find_fields_by_table(table_name, target_fields):
 
 # Step5 生成SQL
 def generate_SQL(risk, target_fields, key_fields):
-    print("取数Step5: 生成SQL文件")
+    # print("取数Step5:
+    print("生成SQL文件")
     PROMPT_TEMPLATE = '''
     根据关键字段和目标字段，仿照下面的SQL脚本的格式，写一个取数脚本，只返回脚本
     
@@ -402,7 +431,7 @@ def pipeline(risk):
             "比对字段": chosen_fields,
 
         }
-        output.append(epoch)
+        # output.append(epoch)
         print(item.keys())
         if "." in item["中台共享层表单编码"] and len(item["中台共享层表单编码"].splitlines()) > 1:
             table_names = [line.split('.', 1)[1] for line in item["中台共享层表单编码"].splitlines()]
@@ -416,7 +445,8 @@ def pipeline(risk):
                 target_fields = instance["目标字段"]
                 key_fields = instance["整单元格内容"]
                 SQL = generate_SQL(risk, target_fields, key_fields)
-                output.append(SQL)
+                epoch["SQL"] = SQL
+                output.append(epoch)
 
     return output
 

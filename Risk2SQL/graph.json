@@ -1,42 +1,310 @@
 {
-    "PRPS": [
-        "PSPHI",
-        "MANDT",
-        "POST1",
-        "PSPNR",
-        "POSID",
-        "USR08",
-        "PRART",
-        "OBJNR",
-        "POSKI"
+    "entities": [
+        {
+            "name": "PRPS",
+            "type": "Table"
+        },
+        {
+            "name": "PSPHI",
+            "type": "Field"
+        },
+        {
+            "name": "POST1",
+            "type": "Field"
+        },
+        {
+            "name": "POSID",
+            "type": "Field"
+        },
+        {
+            "name": "POSKI",
+            "type": "Field"
+        },
+        {
+            "name": "MANDT",
+            "type": "Field"
+        },
+        {
+            "name": "OBJNR",
+            "type": "Field"
+        },
+        {
+            "name": "USR08",
+            "type": "Field"
+        },
+        {
+            "name": "PSPNR",
+            "type": "Field"
+        },
+        {
+            "name": "PRART",
+            "type": "Field"
+        },
+        {
+            "name": "PROJ",
+            "type": "Table"
+        },
+        {
+            "name": "VERNR",
+            "type": "Field"
+        },
+        {
+            "name": "POST1",
+            "type": "Field"
+        },
+        {
+            "name": "OBJNR",
+            "type": "Field"
+        },
+        {
+            "name": "VBUKR",
+            "type": "Field"
+        },
+        {
+            "name": "PRCTR",
+            "type": "Field"
+        },
+        {
+            "name": "ERNAM",
+            "type": "Field"
+        },
+        {
+            "name": "MANDT",
+            "type": "Field"
+        },
+        {
+            "name": "ERDAT",
+            "type": "Field"
+        },
+        {
+            "name": "PSPID",
+            "type": "Field"
+        },
+        {
+            "name": "PSPNR",
+            "type": "Field"
+        },
+        {
+            "name": "BSEG",
+            "type": "Table"
+        },
+        {
+            "name": "mandt",
+            "type": "Field"
+        },
+        {
+            "name": "buzei",
+            "type": "Field"
+        },
+        {
+            "name": "gjahr",
+            "type": "Field"
+        },
+        {
+            "name": "bzdat",
+            "type": "Field"
+        },
+        {
+            "name": "bukrs",
+            "type": "Field"
+        },
+        {
+            "name": "belnr",
+            "type": "Field"
+        },
+        {
+            "name": "CDPOS",
+            "type": "Table"
+        },
+        {
+            "name": "mandant",
+            "type": "Field"
+        },
+        {
+            "name": "value_new",
+            "type": "Field"
+        },
+        {
+            "name": "objectid",
+            "type": "Field"
+        },
+        {
+            "name": "value_old",
+            "type": "Field"
+        },
+        {
+            "name": "tabname",
+            "type": "Field"
+        },
+        {
+            "name": "objectclas",
+            "type": "Field"
+        },
+        {
+            "name": "changenr",
+            "type": "Field"
+        }
     ],
-    "PROJ": [
-        "OBJNR",
-        "MANDT",
-        "PSPNR",
-        "POST1",
-        "PSPID",
-        "ERDAT",
-        "VBUKR",
-        "VERNR",
-        "ERNAM",
-        "PRCTR"
-    ],
-    "BSEG": [
-        "belnr",
-        "bzdat",
-        "bukrs",
-        "mandt",
-        "buzei",
-        "gjahr"
-    ],
-    "CDPOS": [
-        "objectclas",
-        "value_new",
-        "objectid",
-        "changenr",
-        "value_old",
-        "tabname",
-        "mandant"
+    "relationships": [
+        {
+            "from_entity": "PRPS",
+            "to_entity": "PSPHI",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "PRPS",
+            "to_entity": "POST1",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "PRPS",
+            "to_entity": "POSID",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "PRPS",
+            "to_entity": "POSKI",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "PRPS",
+            "to_entity": "MANDT",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "PRPS",
+            "to_entity": "OBJNR",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "PRPS",
+            "to_entity": "USR08",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "PRPS",
+            "to_entity": "PSPNR",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "PRPS",
+            "to_entity": "PRART",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "PROJ",
+            "to_entity": "VERNR",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "PROJ",
+            "to_entity": "POST1",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "PROJ",
+            "to_entity": "OBJNR",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "PROJ",
+            "to_entity": "VBUKR",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "PROJ",
+            "to_entity": "PRCTR",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "PROJ",
+            "to_entity": "ERNAM",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "PROJ",
+            "to_entity": "MANDT",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "PROJ",
+            "to_entity": "ERDAT",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "PROJ",
+            "to_entity": "PSPID",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "PROJ",
+            "to_entity": "PSPNR",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "BSEG",
+            "to_entity": "mandt",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "BSEG",
+            "to_entity": "buzei",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "BSEG",
+            "to_entity": "gjahr",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "BSEG",
+            "to_entity": "bzdat",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "BSEG",
+            "to_entity": "bukrs",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "BSEG",
+            "to_entity": "belnr",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "CDPOS",
+            "to_entity": "mandant",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "CDPOS",
+            "to_entity": "value_new",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "CDPOS",
+            "to_entity": "objectid",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "CDPOS",
+            "to_entity": "value_old",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "CDPOS",
+            "to_entity": "tabname",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "CDPOS",
+            "to_entity": "objectclas",
+            "relationship": "has_field"
+        },
+        {
+            "from_entity": "CDPOS",
+            "to_entity": "changenr",
+            "relationship": "has_field"
+        }
     ]
 }

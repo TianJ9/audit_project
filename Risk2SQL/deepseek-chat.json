@@ -7,9 +7,9 @@
         "比对字段": [
             "预转资日期",
             "投运日期"
-        ]
+        ],
+        "SQL": "```sql\nSELECT  prps.usr08 AS operation_start_date\nFROM    PRO_DWH_ERP_PRD.ods_erp_p00_sapsr3_PROJ proj\nLEFT JOIN pro_dwh_erp_prd.ods_erp_p00_sapsr3_prps PRPS\nON      PROJ.PSPNR = prps.PSPHI\nAND     LENGTH(TRIM(PRPS.PSPNR)) > 0\nAND     prps.stufe IN (1, 2)\nAND     PRPS.mandt = '880'\nAND     PRPS.ds = MAX_PT('pro_dwh_erp_prd.ods_erp_p00_sapsr3_prps')\nWHERE   proj.mandt = '880'\nAND     proj.ds = MAX_PT('PRO_DWH_ERP_PRD.ods_erp_p00_sapsr3_PROJ')\nAND     proj.pspid in ('18138721004F', '18138721004B', '18138721000U')\n;"
     },
-    "```sql\nSELECT  prps.usr08 AS operation_start_date\nFROM    PRO_DWH_ERP_PRD.ods_erp_p00_sapsr3_PROJ proj\nLEFT JOIN pro_dwh_erp_prd.ods_erp_p00_sapsr3_prps PRPS\nON      PROJ.PSPNR = prps.PSPHI\nAND     LENGTH(TRIM(PRPS.PSPNR)) > 0\nAND     prps.stufe IN (1, 2)\nAND     PRPS.mandt = '880'\nAND     PRPS.ds = MAX_PT('pro_dwh_erp_prd.ods_erp_p00_sapsr3_prps')\nWHERE   proj.mandt = '880'\nAND     proj.ds = MAX_PT('PRO_DWH_ERP_PRD.ods_erp_p00_sapsr3_PROJ')\nAND     proj.pspid in ('18138721004F', '18138721004B', '18138721000U')\n;",
     {
         "风险点": "审定结算不及时",
         "审计风险描述": "对比项目投运日期和工程结算日期:\n1.项目类型为11、13、15，工程结算日期>投运日期+100天\n2.其他资本性项目，工程结算日期>投运日期+60天",
@@ -18,8 +18,18 @@
         "比对字段": [
             "工程结算日期",
             "投运日期"
-        ]
+        ],
+        "SQL": "```sql\nSELECT  prps.usr08 AS operation_start_date\nFROM    PRO_DWH_ERP_PRD.ods_erp_p00_sapsr3_prps prps\nWHERE   prps.mandt = '880'\nAND     prps.ds = MAX_PT('pro_dwh_erp_prd.ods_erp_p00_sapsr3_prps')\nAND     prps.pspid IN ('18138721004F', '18138721004B', '18138721000U')\nAND     LENGTH(TRIM(prps.pspnr)) > 0\nAND     prps.stufe IN (1, 2)\n;\n```"
     },
-    "```sql\nSELECT  ZGCJSRQ AS 工程结算日期\nFROM    PRO_DWH_ERP_PRD.ods_erp_p00_sapsr3_PROJ proj\nLEFT JOIN pro_dwh_erp_prd.ods_erp_p00_sapsr3_prps PRPS\nON      PROJ.PSPNR = prps.PSPHI\nAND     LENGTH(TRIM(PRPS.PSPNR)) > 0\nAND     PRPS.mandt = '880'\nAND     PRPS.ds = MAX_PT('pro_dwh_erp_prd.ods_erp_p00_sapsr3_prps')\nWHERE   proj.mandt = '880'\nAND     proj.ds = MAX_PT('PRO_DWH_ERP_PRD.ods_erp_p00_sapsr3_PROJ')\nAND     proj.pspid in ('18138721004F', '18138721004B', '18138721000U');\n```",
-    "```sql\nSELECT  prps.usr08 AS operation_start_date\nFROM    PRO_DWH_ERP_PRD.ods_erp_p00_sapsr3_PROJ proj\nLEFT JOIN pro_dwh_erp_prd.ods_erp_p00_sapsr3_prps PRPS\nON      PROJ.PSPNR = prps.PSPHI\nAND     LENGTH(TRIM(PRPS.PSPNR)) > 0\nAND     prps.stufe IN (1, 2)\nAND     PRPS.mandt = '880'\nAND     PRPS.ds = MAX_PT('pro_dwh_erp_prd.ods_erp_p00_sapsr3_prps')\nWHERE   proj.mandt = '880'\nAND     proj.ds = MAX_PT('PRO_DWH_ERP_PRD.ods_erp_p00_sapsr3_PROJ')\nAND     proj.pspid in ('18138721004F', '18138721004B', '18138721000U')\n;"
+    {
+        "风险点": "审定结算不及时",
+        "审计风险描述": "对比项目投运日期和工程结算日期:\n1.项目类型为11、13、15，工程结算日期>投运日期+100天\n2.其他资本性项目，工程结算日期>投运日期+60天",
+        "政策制度及管理办法": "《国家电网有限公司工程财务管理办法（2023）》第七章第四十五（二）规定：1.特高压工程及抽水蓄能项目在竣工投运后 100 日内完成 工程结算编制和审核，财务部门在收到工程结算资料后 260 日内完成竣工决算报告编制。工程竣工决算整体时间原则上控制在工 程竣工投运后 1 年内完成。2.220 千伏及以上至 750 千伏电网基建工程在竣工投运后 100 日内完成工程结算编制和审核，财务部门在收到结算资料后 170 日内完成竣工决算报告编制。工程竣工决算整体时间原则上 控制在工程竣工投运后 9 个月内完成。3.110 千伏及以下电网基建工程、生产技术改造项目、电网小型基建、电力市场营销、电网数字化等其他工程在竣工投运后60日内完成工程结算编制和审核，财务部门在收到结算资料后120日内完成竣工决算报告编制。工程竣工决算整体时间原则上 控制在工程竣工投运后 6个月内完成。",
+        "风险判定逻辑": "1.工程结算日期-投运日期>100天\n2.工程结算日期-投运日期>60天",
+        "比对字段": [
+            "工程结算日期",
+            "投运日期"
+        ],
+        "SQL": "```sql\nSELECT  prps.usr08 AS operation_start_date\nFROM    PRO_DWH_ERP_PRD.ods_erp_p00_sapsr3_prps prps\nWHERE   prps.mandt = '880'\nAND     prps.ds = MAX_PT('pro_dwh_erp_prd.ods_erp_p00_sapsr3_prps')\nAND     prps.pspid IN ('18138721004F', '18138721004B', '18138721000U')\nAND     LENGTH(TRIM(prps.pspnr)) > 0\nAND     prps.stufe IN (1, 2)\n;\n```"
+    }
 ]
