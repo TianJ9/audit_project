@@ -9,7 +9,6 @@
 
 import json
 
-#TODO: 输出中补充政策制度及管理办法、风险判定逻辑
 
 # API1 输出
 PROJECT_RANGE = ""

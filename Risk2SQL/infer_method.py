@@ -20,18 +20,18 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 
-# client = OpenAI(
-#     base_url="https://openrouter.ai/api/v1",
-#     api_key="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",
-# )
-
-# model = "deepseek/deepseek-chat-v3-0324"
-
 client = OpenAI(
-    base_url="https://api.deepseek.com",
-    api_key="sk-8d51d6ac51a54945a02d7979ef2e9e8f",
+    base_url="https://openrouter.ai/api/v1",
+    api_key="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",
 )
-model="deepseek-chat"
+
+model = "deepseek/deepseek-chat-v3-0324"
+
+# client = OpenAI(
+#     base_url="https://api.deepseek.com",
+#     api_key="",
+# )
+# model="deepseek-chat"
 
 
 # 可以按需改写为本地部署的生成方式
