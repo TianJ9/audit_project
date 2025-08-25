@@ -77,7 +77,7 @@ print("API 3: 根据风险点找到需要比对的字段，同时生成取数SQL
 print(f"使用{model}模型演示中")
 
 
-# Step1 根据风险点获取对应的数据，包含“审计风险描述”、“风险判定逻辑”和“判定参数”
+# Step1 遍历1.1中的数据表，并
 def find_risk_rows(file_path, search_value):
     print("取数Step1: 获取风险点对应描述、判定逻辑和判定参数")
     # 1. 读入文件
@@ -85,7 +85,8 @@ def find_risk_rows(file_path, search_value):
     ws = wb.active
 
     # 2. 查找第二行中的目标列索引
-    target_headers = ["审计风险点", "审计风险描述", "风险判定逻辑", "判定参数", "中台共享层表单编码"]
+    target_headers = ["审计风险点", "审计风险描述", "政策制度及管理办法", "风险判定逻辑", "判定参数"]
+                      # "中台共享层表单编码"]
     col_indices = {}
 
     for col in range(1, ws.max_column + 1):
@@ -292,9 +293,11 @@ def pipeline(risk):
 
         epoch = {
             "风险点": risk,
+            "审计风险描述": item["审计风险描述"],
+            "政策制度及管理办法": item["政策制度及管理办法"],
             "风险判定逻辑": logic,
             "比对字段": chosen_fields,
-            "审计风险描述": item["审计风险描述"]
+
         }
         output.append(epoch)
 
