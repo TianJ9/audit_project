@@ -1,12 +1,13 @@
 #Step 1 收到用户前端query，查询各种内容，得到异常排查方向
 from flask import Flask, request, jsonify
 import json
-
+from Risk2SQL.infer_method import run_pipelines
+from Summary import summary
 from openai import OpenAI
 
 client = OpenAI(
   base_url="https://openrouter.ai/api/v1",
-  api_key="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",
+  api_key="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",
 )
 
 def model_gen(prompt):
@@ -144,7 +145,8 @@ def thinking_process(query):
     SYS_MSG = '''请你针对用户输入的提问（一个审计问题），输出项目的内容范围（时间、是综合计划内的项目、是否是配网项目、项目的地点）。
 下面是用户输入的提问：
 '''
-    model_thinking_content = model_gen(SYS_MSG + query)
+    project_scope = model_gen(SYS_MSG + query)
+    model_thinking_content = project_scope
     # "然后输出用户提问的业务对象是哪一个或哪几个（项目、物资、资产、设备），然后输出你对这个用户输入问题的问题定位，可能是哪些异常（从以下6个异常分类中选择单个或多个，不要解释：时间异常、金额异常、流程异常、资料异常、归类异常、状态异常）"
 
     SYS_MSG_1 = '''请你提取出用户输入的提问中，具体提问审计项目的什么方面，不要输出其他内容。例如：用户输入：对2022-2024年南平公司光泽县配网项目转资异常分析。输出：转资异常分析。
@@ -180,7 +182,7 @@ def thinking_process(query):
 
     model_thinking_content += f"从业数审图谱中推理得到路径：{paths}"
     # print(model_thinking_content)
-    return model_thinking_content
+    return model_thinking_content, error_type, paths, project_scope
 
 def thinking_graph_output(error_type,reasoning_path):
     root,level3_to_risk_point = build_tree("")
@@ -301,17 +303,20 @@ def analyse_root_reason(data):
 
     return temp_query
 
+# API 1
 @app.route('/api/thinking_content', methods=['POST'])
 def process_tc():
     data = request.get_json()
     query = data.get("query", "")
-    result = thinking_process(query)
+    result,error_type,paths,project_scope = thinking_process(query)
+    # result = "xxx"
     return app.response_class(
-        response=json.dumps({"result": result}, ensure_ascii=False),
+        response=json.dumps({"result": result,"error_type":error_type,"reasoning_path":paths,"project_scope":project_scope,}, ensure_ascii=False),
         status=200,
         mimetype='application/json'
     )
 
+# API 2
 @app.route('/api/thinking_graph', methods=['POST'])
 def process_tg():
     data = request.get_json()
@@ -324,69 +329,101 @@ def process_tg():
         mimetype='application/json'
     )
 
-
-@app.route('/api/check_steps', methods=['POST'])
-def process_1_2():
+# API 3
+@app.route('/api/ask_for_number', methods=['POST'])
+def process_afn():
     data = request.get_json()
-    result = check_steps_gen(data)
+    risks = data.get("risks", [])
+    output = run_pipelines(risks)
+    return app.response_class(
+        response=json.dumps({"result": output}, ensure_ascii=False),
+        status=200,
+        mimetype='application/json'
+    )
+
+# API 4
+@app.route('/api/task_plan', methods=['POST'])
+def process_tp():
+    data = request.get_json()
+    project_scope = data.get("project_scope", "")
+    result = summary.summary_Method(project_scope)
     return app.response_class(
         response=json.dumps({"result": result}, ensure_ascii=False),
         status=200,
         mimetype='application/json'
     )
 
-@app.route('/api/check_directions', methods=['POST'])
-def process_1_cd():
-    data = request.get_json()
-    query = data.get("query", "")
-    result = check_directions_gen(query)
-    return app.response_class(
-        response=json.dumps({"result": result}, ensure_ascii=False),
-        status=200,
-        mimetype='application/json'
-    )
+# 过往作废api⬇
+# @app.route('/api/check_steps', methods=['POST'])
+# def process_1_2():
+#     data = request.get_json()
+#     result = check_steps_gen(data)
+#     return app.response_class(
+#         response=json.dumps({"result": result}, ensure_ascii=False),
+#         status=200,
+#         mimetype='application/json'
+#     )
 
-@app.route('/api/decision_logic', methods=['POST'])
-def process_1_dl():
-    data = request.get_json()
-    check_direction = data.get("check_direction", "")
-    result = decision_logic_gen(check_direction)
-    return app.response_class(
-        response=json.dumps({"result": result}, ensure_ascii=False),
-        status=200,
-        mimetype='application/json'
-    )
+# @app.route('/api/check_directions', methods=['POST'])
+# def process_1_cd():
+#     data = request.get_json()
+#     query = data.get("query", "")
+#     result = check_directions_gen(query)
+#     return app.response_class(
+#         response=json.dumps({"result": result}, ensure_ascii=False),
+#         status=200,
+#         mimetype='application/json'
+#     )
 
-@app.route('/api/deepen_reasoning', methods=['POST'])
-def process_2():
-    data = request.get_json()
-    result = analyse_doubt_point(data)
-    return app.response_class(
-        response=json.dumps({"result": result}, ensure_ascii=False),
-        status=200,
-        mimetype='application/json'
-    )
+# @app.route('/api/decision_logic', methods=['POST'])
+# def process_1_dl():
+#     data = request.get_json()
+#     check_direction = data.get("check_direction", "")
+#     result = decision_logic_gen(check_direction)
+#     return app.response_class(
+#         response=json.dumps({"result": result}, ensure_ascii=False),
+#         status=200,
+#         mimetype='application/json'
+#     )
 
-@app.route('/api/root_reason_analyse', methods=['POST'])
-def process_3():
-    data = request.get_json()
-    result = analyse_root_reason(data)
-    return app.response_class(
-        response=json.dumps({"result": result}, ensure_ascii=False),
-        status=200,
-        mimetype='application/json'
-    )
+# @app.route('/api/deepen_reasoning', methods=['POST'])
+# def process_2():
+#     data = request.get_json()
+#     result = analyse_doubt_point(data)
+#     return app.response_class(
+#         response=json.dumps({"result": result}, ensure_ascii=False),
+#         status=200,
+#         mimetype='application/json'
+#     )
+
+# @app.route('/api/root_reason_analyse', methods=['POST'])
+# def process_3():
+#     data = request.get_json()
+#     result = analyse_root_reason(data)
+#     return app.response_class(
+#         response=json.dumps({"result": result}, ensure_ascii=False),
+#         status=200,
+#         mimetype='application/json'
+#     )
 
 if __name__ == '__main__':
     # host=0.0.0.0 允许外部访问
     app.run(host='0.0.0.0', port=5000)
-    # thinking_process("对2022-2024年南平公司光泽县配网项目转资异常分析")
-    # thinking_graph_output("流程异常 资料异常 金额异常","财务资产 - 工程财务 - 项目暂估转资及决算不规范")
 
-# curl -X POST https://d73631c3f7c9.ngrok-free.app/api/thinking_content \
+
+# 调试代码，每次启动ngrok变换地址即可
+# curl -X POST https://a87a03a6daff.ngrok-free.app/api/ask_for_number \
+#     -H "Content-Type: application/json" \
+#     -d '{"risks": ["预转资异常","审定结算不及时"]}'
+
+# curl -X POST https://a87a03a6daff.ngrok-free.app/api/thinking_content \
 #     -H "Content-Type: application/json" \
 #     -d '{"query": "对2022-2024年南平公司光泽县配网项目转资异常分析"}'
 
-# curl -X POST https://d73631c3f7c9.ngrok-free.app/api/thinking_graph \
+# curl -X POST https://a87a03a6daff.ngrok-free.app/api/thinking_graph \
 #     -H "Content-Type: application/json" \
 #     -d '{"error_type": "时间异常、金额异常","reasoning_path":"财务资产 - 工程财务 - 项目暂估转资及决算不规范"}'
+
+# curl -X POST https://a87a03a6daff.ngrok-free.app/api/task_plan \
+#     -H "Content-Type: application/json" \
+#     -d '{"project_scope": "xxxx"}'

@@ -36,10 +36,10 @@ RISK2METHOD = [
     }
     ]
 
-def summary_Method(PROJECT_RANGE, RISKS, RISK2METHOD):
+def summary_Method(PROJECT_RANGE):
 
-    OUTPUT = '''
-(1)项目清单范围确定：通过SQL脚本+API从数据中台获取2022至2024年度综合计划项目，筛选出南平公司光泽县公司负责的已竣工资本性投资项目清单。'''
+    OUTPUT = f'''
+(1)项目清单范围确定：通过SQL脚本+API从数据中台获取：{PROJECT_RANGE}'''
     # (2)预转资异常排查：利用业数图谱推理出“工程投运日期、第一次转资日期”关键数据的来源，通过SQL脚本+API从数据中台相关数据，结合审计依据，根据逻辑推理的工程预转资异常判断规则，排查确定预转资提前或超期疑点。
     # (3)工程正式转资异常排查
     # (4)资产账面价值与实际造价不符排查

@@ -100,3 +100,14 @@ def tree_search(root,query):
 root = build_tree(file_path)
 paths = tree_search(root,"转资异常分析")
 print(paths)
+
+@app.route('/api/ask_for_number', methods=['POST'])
+def process_afn():
+    data = request.get_json()
+    risks = data.get("risks", [])
+    output = run_pipelines(risks)
+    return app.response_class(
+        response=json.dumps({"result": output}, ensure_ascii=False),
+        status=200,
+        mimetype='application/json'
+    )

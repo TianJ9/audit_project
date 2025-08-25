@@ -17,11 +17,11 @@ import os
 from jinja2 import Template
 
 client = OpenAI(
-    base_url="https://api.deepseek.com",
-    api_key="",
+    base_url="https://openrouter.ai/api/v1",
+    api_key="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",
 )
 
-model = "deepseek-reasoner"
+model = "deepseek/deepseek-chat-v3-0324"
 # model="deepseek-chat"
 
 
@@ -154,7 +154,7 @@ def find_fields_by_table(table_name, target_fields):
     table_name: 要匹配的表名（第8列）
     target_fields: 目标字段列表，用于匹配第9列
     """
-    file_path = "data/SourceData.xlsx"
+    file_path = "/Users/pantianjun/Desktop/audit_project/Risk2SQL/data/SourceData.xlsx"
     wb = openpyxl.load_workbook(file_path)
     ws = wb.active
 
@@ -276,14 +276,15 @@ def generate_SQL(risk, target_fields, key_fields):
         except Exception as e:
             print(e)
     # output_name = "_".join(target_fields)
-    output_path = f"{risk}_{model}_{target_fields}.sql"
-    with open(output_path, "w", encoding="utf-8") as f:
-        f.write(response)
+    # output_path = f"{risk}_{model}_{target_fields}.sql"
+    # with open(output_path, "w", encoding="utf-8") as f:
+    #     f.write(response)
+    return response
 
 
 def pipeline(risk):
     print(f"正在为风险点{risk}进行查数操作")
-    file_path = "data/KG.xlsm"  # 你的xlsx路径
+    file_path = "/Users/pantianjun/Desktop/audit_project/Risk2SQL/data/KG.xlsm"  # 你的xlsx路径
     rows, rows_data = find_risk_rows(file_path, risk)
     output = []
     for cnt, item in enumerate(rows_data):
@@ -309,8 +310,15 @@ def pipeline(risk):
             for instance in target_fields_for_sql:
                 target_fields = instance["目标字段"]
                 key_fields = instance["整单元格内容"]
-                generate_SQL(risk, target_fields, key_fields)
+                SQL = generate_SQL(risk, target_fields, key_fields)
+                output.append(SQL)
 
+    return output
+
+def run_pipelines(risks):
+    output = []
+    for risk in risks:
+        output.extend(pipeline(risk))
     return output
 
 def main():
