@@ -13,16 +13,25 @@ import re
 import openpyxl
 from openai import OpenAI
 from openpyxl import load_workbook
-import os
+import pandas as pd
 from jinja2 import Template
+import random
+import networkx as nx
+import matplotlib.pyplot as plt
+
+
+# client = OpenAI(
+#     base_url="https://openrouter.ai/api/v1",
+#     api_key="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",
+# )
+
+# model = "deepseek/deepseek-chat-v3-0324"
 
 client = OpenAI(
     base_url="https://api.deepseek.com",
-    api_key="",
+    api_key="sk-8d51d6ac51a54945a02d7979ef2e9e8f",
 )
-
-model = "deepseek-reasoner"
-# model="deepseek-chat"
+model="deepseek-chat"
 
 
 # 可以按需改写为本地部署的生成方式
@@ -85,8 +94,8 @@ def find_risk_rows(file_path, search_value):
     ws = wb.active
 
     # 2. 查找第二行中的目标列索引
-    target_headers = ["审计风险点", "审计风险描述", "政策制度及管理办法", "风险判定逻辑", "判定参数"]
-                      # "中台共享层表单编码"]
+    target_headers = ["审计风险点", "审计风险描述", "政策制度及管理办法", "风险判定逻辑", "判定参数", "中台共享层表单编码"]
+
     col_indices = {}
 
     for col in range(1, ws.max_column + 1):
@@ -147,15 +156,108 @@ def choose_process(LOGIC):
     return chosen_fields
 
 
-# Step3 完成表格对应数据的映射，获取用于生成SQL的字段
+# Step3 建立图，返回图和推理路径
+# NOTE 仅为演示进行的简化实现
+def infer_graph():
+    print("取数Step3: 读取数据并建立图谱")
+    # TABLE_NAMES = ["PRPS", "PROJ", "BKPF", "BSEG", "CDPOS"]
+
+    def remove_chinese(text: str) -> str:
+        """去掉字符串中的所有中文字符"""
+        if pd.isna(text):
+            return ""
+        return re.sub(r'[\u4e00-\u9fff]', '', str(text))
+
+    df1 = pd.read_excel("data/1.2.xls", sheet_name="数据表字段信息清单", header=None)
+
+    dict1 = {}
+    for _, row in df1.iterrows():
+        col4 = row[3]  # 第四列（index 从0开始，所以是3）
+        col6 = row[5]  # 第六列（index=5）
+        if pd.isna(col4) or pd.isna(col6):
+            continue
+        dict1.setdefault(col4, []).append(col6)
+
+    # 2. 读取 2.xlsx 的 sheet2
+    df2 = pd.read_excel("data/GraphResult.xlsx", sheet_name="数据清单", header=None)
+
+    dict2 = {}
+    # 遍历第2、3、4、6行（Excel行号，pandas index 从0开始，所以对应 index=1,2,3,5）
+    for i in [1, 2, 3, 5]:
+        row = df2.iloc[i]
+        col3 = row[2]  # 第三列 (index=2)
+        col4 = row[3]  # 第四列 (index=3)
+
+        if pd.isna(col3) or pd.isna(col4):
+            continue
+
+        # 处理第三列：去掉 "表："
+        key = str(col3).replace("表：", "").strip()
+
+        # 处理第四列：按 "、" 分割并去掉中文
+        values = [remove_chinese(x).strip() for x in str(col4).split("、") if x.strip()]
+        values = [v for v in values if v]  # 去掉空字符串
+
+        dict2[key] = values
+
+    # 3. 对第一个字典 dict1 进行处理
+    result_dict = {}
+    for key, value1 in dict1.items():
+        if key in dict2:
+            value2 = dict2[key]
+            # 先保留出现在 value2 中的元素
+            filtered = [v for v in value1 if v in value2]
+            # 加入前五个不在 value2 中的元素
+            extra = [v for v in value1 if v not in value2][:5]
+            result_dict[key] = filtered + extra
+            result_dict[key] = list(set(result_dict[key]))
+            random.shuffle(result_dict[key])
+        else:
+            # del result_dict[key]
+            # result_dict[key] = value1  # 如果 dict2 中没有该 key，则保持原样
+            continue
+    print(f"result_dict: {result_dict}")
+
+
+    # 创建图
+    # G = nx.Graph()
+    # # 添加节点和边
+    # for table, fields in result_dict.items():
+    #     G.add_node(table, type="table")  # 表节点
+    #     for field in fields:
+    #         G.add_node(field, type="field")  # 字段节点
+    #         G.add_edge(table, field)  # 表 -> 字段
+    #
+    # # 布局
+    # pos = nx.spring_layout(G, k=0.5, iterations=50)
+    #
+    # # 区分表节点和字段节点
+    # table_nodes = [n for n, d in G.nodes(data=True) if d['type'] == 'table']
+    # field_nodes = [n for n, d in G.nodes(data=True) if d['type'] == 'field']
+    #
+    # # 绘制
+    # plt.figure(figsize=(12, 8))
+    # nx.draw_networkx_nodes(G, pos, nodelist=table_nodes, node_color="lightblue", node_size=1000, label="Tables")
+    # nx.draw_networkx_nodes(G, pos, nodelist=field_nodes, node_color="lightgreen", node_size=600, label="Fields")
+    # nx.draw_networkx_edges(G, pos, alpha=0.5)
+    # nx.draw_networkx_labels(G, pos, font_size=10)
+    #
+    # plt.legend()
+    # plt.axis("off")
+    # plt.show()
+    return result_dict
+
+# Step4 通过直接取数，完成表格对应数据的映射，获取用于生成SQL的字段
 def find_fields_by_table(table_name, target_fields):
-    print("取数Step3: 根据源数据进行映射，找到生成SQL所需参数")
+    print("取数Step4: 根据源数据进行图谱推理，找到生成SQL所需参数")
     """
     file_path: Excel文件路径
     table_name: 要匹配的表名（第8列）
     target_fields: 目标字段列表，用于匹配第9列
     """
-    file_path = "data/SourceData.xlsx"
+
+    # file_path = "/ Users / pantianjun / Desktop / audit_project / Risk2SQL/data/SourceData.xlsx"
+    file_path = "./data/SourceData.xlsx"
     wb = openpyxl.load_workbook(file_path)
     ws = wb.active
 
@@ -193,9 +295,9 @@ def find_fields_by_table(table_name, target_fields):
 
 
 
-# Step4 生成SQL
+# Step5 生成SQL
 def generate_SQL(risk, target_fields, key_fields):
-    print("取数Step4: 生成SQL文件")
+    print("取数Step5: 生成SQL文件")
     PROMPT_TEMPLATE = '''
     根据关键字段和目标字段，仿照下面的SQL脚本的格式，写一个取数脚本，只返回脚本
     
@@ -277,14 +379,15 @@ def generate_SQL(risk, target_fields, key_fields):
         except Exception as e:
             print(e)
     # output_name = "_".join(target_fields)
-    output_path = f"{risk}_{model}_{target_fields}.sql"
-    with open(output_path, "w", encoding="utf-8") as f:
-        f.write(response)
+    # output_path = f"{risk}_{model}_{target_fields}.sql"
+    # with open(output_path, "w", encoding="utf-8") as f:
+    #     f.write(response)
+    return response
 
 
 def pipeline(risk):
     print(f"正在为风险点{risk}进行查数操作")
-    file_path = "data/KG.xlsm"  # 你的xlsx路径
+    file_path = "./data/KG.xlsm"  # 你的xlsx路径
     rows, rows_data = find_risk_rows(file_path, risk)
     output = []
     for cnt, item in enumerate(rows_data):
@@ -300,7 +403,7 @@ def pipeline(risk):
 
         }
         output.append(epoch)
-
+        print(item.keys())
         if "." in item["中台共享层表单编码"] and len(item["中台共享层表单编码"].splitlines()) > 1:
             table_names = [line.split('.', 1)[1] for line in item["中台共享层表单编码"].splitlines()]
         else:
@@ -312,9 +415,19 @@ def pipeline(risk):
             for instance in target_fields_for_sql:
                 target_fields = instance["目标字段"]
                 key_fields = instance["整单元格内容"]
-                generate_SQL(risk, target_fields, key_fields)
+                SQL = generate_SQL(risk, target_fields, key_fields)
+                output.append(SQL)
 
     return output
+
+
+def run_pipelines(risks):
+    output = []
+    for risk in risks:
+        output.extend(pipeline(risk))
+
+    return output
+
 
 def main():
     # 输入风险点
@@ -323,11 +436,15 @@ def main():
         "审定结算不及时"
     ]
     output = []
+    graph_dict = infer_graph()
+
     for risk in risks:
         output.extend(pipeline(risk))
+    with open("graph.json", "w", encoding="utf-8") as f:
+        json.dump(graph_dict, f, ensure_ascii=False, indent=4)
     with open(f"{model}.json", "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=4)
 
 if __name__ == "__main__":
     main()
-
+    # infer_graph()

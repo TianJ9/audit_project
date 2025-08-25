@@ -7,13 +7,13 @@
 
 '''
 
-#TODO: 输出中补充政策制度及管理办法、风险判定逻辑
-
 import json
+
+#TODO: 输出中补充政策制度及管理办法、风险判定逻辑
 
 # API1 输出
 PROJECT_RANGE = ""
-# # API2 输出
+# API2 输出
 RISKS = []
 # API3 输出
 RISK2METHOD = [
@@ -38,9 +38,9 @@ RISK2METHOD = [
     ]
 
 def summary_Method(PROJECT_RANGE, RISKS, RISK2METHOD):
-    # 2022至2024年度综合计划项目
-    OUTPUT = f'''
-(1)项目清单范围确定：通过SQL脚本+API从数据中台获取{PROJECT_RANGE}，筛选出南平公司光泽县公司负责的已竣工资本性投资项目清单。'''
+
+    OUTPUT = '''
+(1)项目清单范围确定：通过SQL脚本+API从数据中台获取2022至2024年度综合计划项目，筛选出南平公司光泽县公司负责的已竣工资本性投资项目清单。'''
     # (2)预转资异常排查：利用业数图谱推理出“工程投运日期、第一次转资日期”关键数据的来源，通过SQL脚本+API从数据中台相关数据，结合审计依据，根据逻辑推理的工程预转资异常判断规则，排查确定预转资提前或超期疑点。
     # (3)工程正式转资异常排查
     # (4)资产账面价值与实际造价不符排查
@@ -49,7 +49,11 @@ def summary_Method(PROJECT_RANGE, RISKS, RISK2METHOD):
         risk = RISK["风险点"]
         key_data = "、".join(RISK["比对字段"])
         desc = RISK["审计风险描述"].replace("\n", " ")
-        OUTPUT += f"\n({cnt+2}){risk}排查：利用业数图谱推理出“{key_data}”关键数据的来源，通过SQL脚本+API从数据中台相关数据，{desc}"
+        policy = RISK["政策制度及管理办法"]
+        logic = RISK["风险判定逻辑"]
+
+        OUTPUT += (f"\n({cnt+2}){risk}排查：这一风险点指{desc}，我将利用业数图谱推理出“{key_data}”关键数据的来源，通过SQL脚本+API从数据中台相关数据；"
+                   f"根据{policy}，这一风险点的判断逻辑是{logic}")
 
     return OUTPUT
 

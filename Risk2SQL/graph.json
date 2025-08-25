@@ -1,0 +1,42 @@
+{
+    "PRPS": [
+        "PSPHI",
+        "MANDT",
+        "POST1",
+        "PSPNR",
+        "POSID",
+        "USR08",
+        "PRART",
+        "OBJNR",
+        "POSKI"
+    ],
+    "PROJ": [
+        "OBJNR",
+        "MANDT",
+        "PSPNR",
+        "POST1",
+        "PSPID",
+        "ERDAT",
+        "VBUKR",
+        "VERNR",
+        "ERNAM",
+        "PRCTR"
+    ],
+    "BSEG": [
+        "belnr",
+        "bzdat",
+        "bukrs",
+        "mandt",
+        "buzei",
+        "gjahr"
+    ],
+    "CDPOS": [
+        "objectclas",
+        "value_new",
+        "objectid",
+        "changenr",
+        "value_old",
+        "tabname",
+        "mandant"
+    ]
+}
