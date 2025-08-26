@@ -334,9 +334,9 @@ def process_tg():
 def process_afn():
     data = request.get_json()
     risks = data.get("risks", [])
-    output = run_pipelines(risks)
+    output, graph = run_pipelines(risks)
     return app.response_class(
-        response=json.dumps({"result": output}, ensure_ascii=False),
+        response=json.dumps({"result": {"output": output, "think_graph": graph}}, ensure_ascii=False),
         status=200,
         mimetype='application/json'
     )
@@ -346,7 +346,8 @@ def process_afn():
 def process_tp():
     data = request.get_json()
     project_scope = data.get("project_scope", "")
-    result = summary.summary_Method(project_scope)
+    risk2method = data.get("risk2method", "")
+    result = summary.summary_Method(project_scope, risk2method)
     return app.response_class(
         response=json.dumps({"result": result}, ensure_ascii=False),
         status=200,

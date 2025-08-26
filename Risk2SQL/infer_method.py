@@ -455,8 +455,8 @@ def run_pipelines(risks):
     output = []
     for risk in risks:
         output.extend(pipeline(risk))
-
-    return output
+    graph_dict = infer_graph()
+    return output, graph_dict
 
 
 def main():

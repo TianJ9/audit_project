@@ -36,7 +36,7 @@ RISK2METHOD = [
     }
     ]
 
-def summary_Method(PROJECT_RANGE, RISKS, RISK2METHOD):
+def summary_Method(PROJECT_RANGE, RISK2METHOD):
 
     OUTPUT = '''
 (1)项目清单范围确定：通过SQL脚本+API从数据中台获取2022至2024年度综合计划项目，筛选出南平公司光泽县公司负责的已竣工资本性投资项目清单。'''
