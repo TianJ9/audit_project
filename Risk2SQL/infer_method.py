@@ -16,13 +16,13 @@ from openpyxl import load_workbook
 import pandas as pd
 from jinja2 import Template
 import random
-import networkx as nx
-import matplotlib.pyplot as plt
+# import networkx as nx
+# import matplotlib.pyplot as plt
 
 
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
-    api_key="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",
+    api_key="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",
 )
 
 model = "deepseek/deepseek-chat-v3-0324"
@@ -170,8 +170,11 @@ def infer_graph():
         if pd.isna(text):
             return ""
         return re.sub(r'[\u4e00-\u9fff]', '', str(text))
-
-    df1 = pd.read_excel("data/1.2.xls", sheet_name="数据表字段信息清单", header=None)
+    
+    import os
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(BASE_DIR, "data", "1.2.xls")
+    df1 = pd.read_excel(file_path, sheet_name="数据表字段信息清单", header=None)
 
     dict1 = {}
     for _, row in df1.iterrows():
@@ -182,7 +185,8 @@ def infer_graph():
         dict1.setdefault(col4, []).append(col6)
 
     # 2. 读取 2.xlsx 的 sheet2
-    df2 = pd.read_excel("data/GraphResult.xlsx", sheet_name="数据清单", header=None)
+    file_path = os.path.join(BASE_DIR, "data", "GraphResult.xlsx")
+    df2 = pd.read_excel(file_path, sheet_name="数据清单", header=None)
 
     dict2 = {}
     # 遍历第2、3、4、6行（Excel行号，pandas index 从0开始，所以对应 index=1,2,3,5）
@@ -283,9 +287,10 @@ def find_fields_by_table(table_name, target_fields):
     table_name: 要匹配的表名（第8列）
     target_fields: 目标字段列表，用于匹配第9列
     """
-
-    # file_path = "/ Users / pantianjun / Desktop / audit_project / Risk2SQL/data/SourceData.xlsx"
-    file_path = "./data/SourceData.xlsx"
+    import os
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(BASE_DIR, "data", "SourceData.xlsx")
+    # file_path = "./data/SourceData.xlsx"
     wb = openpyxl.load_workbook(file_path)
     ws = wb.active
 
@@ -416,7 +421,9 @@ def generate_SQL(risk, target_fields, key_fields):
 
 def pipeline(risk):
     print(f"正在为风险点{risk}进行查数操作")
-    file_path = "./data/KG.xlsm"  # 你的xlsx路径
+    import os
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(BASE_DIR, "data", "KG.xlsm") # 你的xlsx路径
     rows, rows_data = find_risk_rows(file_path, risk)
     output = []
     for cnt, item in enumerate(rows_data):
