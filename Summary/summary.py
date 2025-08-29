@@ -36,11 +36,112 @@ RISK2METHOD = [
     }
     ]
 
-def summary_Method(PROBLEM_TYPE, PROJECT_SCOPE,
+def summary_Method(PROCESS_TYPE, PROBLEM_TYPE, PROJECT_SCOPE, PROBLEM_MAPPING,
                    RISKS, RISK_GROUNDS, LOGIC, PROCESS_ITEM, SERVICE_OBJECT,
                    RISK2METHOD, SQL):
 
     OUTPUT = ""
+
+    if PROCESS_TYPE:
+        OUTPUT += "流程定位："
+        if type(PROCESS_TYPE) is list:
+            for process in PROCESS_TYPE:
+                OUTPUT += f"{process}; "
+            OUTPUT += "\n"
+        elif type(PROCESS_TYPE) is str:
+            OUTPUT += f"{PROCESS_TYPE}\n"
+
+    if PROBLEM_TYPE:
+        OUTPUT += "问题分类："
+        if type(PROBLEM_TYPE) is list:
+            for type_ in PROBLEM_TYPE:
+                OUTPUT += f"{type_}; "
+            OUTPUT += "\n"
+        elif type(PROBLEM_TYPE) is str:
+            OUTPUT += f"{PROBLEM_TYPE}\n"
+
+    if PROJECT_SCOPE:
+        OUTPUT += f"项目范围："
+        if type(PROJECT_SCOPE) is list:
+            for project_scope in PROJECT_SCOPE:
+                OUTPUT += f"{project_scope}; "
+            OUTPUT += "\n"
+        elif type(PROJECT_SCOPE) is str:
+            OUTPUT += f"{PROJECT_SCOPE}\n"
+
+    if PROBLEM_MAPPING:
+        OUTPUT += "问题分类映射到审计问题："
+        if type(PROBLEM_MAPPING) is list:
+            for mapping_ in PROBLEM_MAPPING:
+                OUTPUT += f"{mapping_}; "
+            OUTPUT += "\n"
+        elif type(PROBLEM_MAPPING) is str:
+            OUTPUT += f"{PROBLEM_MAPPING}\n"
+
+    if RISKS:
+        OUTPUT += "风险点："
+        if type(RISKS) is list:
+            for risk in RISKS:
+                OUTPUT += f"{risk}; "
+            OUTPUT += "\n"
+        elif type(RISKS) is str:
+            OUTPUT += f"{RISKS}\n"
+
+    if RISK_GROUNDS:
+        OUTPUT += "问题依据："
+        if type(RISK_GROUNDS) is list:
+            for risk_ground in RISK_GROUNDS:
+                OUTPUT += f"{risk_ground}; "
+            OUTPUT += "\n"
+        elif type(RISK_GROUNDS) is str:
+            OUTPUT += f"{RISK_GROUNDS}\n"
+
+    if LOGIC:
+        OUTPUT += "判定逻辑："
+        if type(LOGIC) is list:
+            for logic in LOGIC:
+                OUTPUT += f"{logic}; "
+            OUTPUT += "\n"
+        elif type(LOGIC) is str:
+            OUTPUT += f"{LOGIC}\n"
+
+    if PROCESS_ITEM:
+        OUTPUT += f"业务活动："
+        if type(PROCESS_ITEM) is list:
+            for process_item in PROCESS_ITEM:
+                OUTPUT += f"{process_item}; "
+            OUTPUT += "\n"
+        elif type(PROCESS_ITEM) is str:
+            OUTPUT += f"{PROCESS_ITEM}\n"
+
+    if SERVICE_OBJECT:
+        OUTPUT += f"风险点目标字段："
+        if type(SERVICE_OBJECT) is list:
+            for service_object in SERVICE_OBJECT:
+                OUTPUT += f"{service_object}; "
+            OUTPUT += "\n"
+        elif type(SERVICE_OBJECT) is str:
+            OUTPUT += f"{SERVICE_OBJECT}\n"
+
+
+    if RISK2METHOD:
+        OUTPUT += f"风险点目标字段："
+        if type(RISK2METHOD) is list:
+            for risk2method in RISK2METHOD:
+                OUTPUT += f"{risk2method}; "
+            OUTPUT += "\n"
+        elif type(RISK2METHOD) is str:
+            OUTPUT += f"{RISK2METHOD}; \n"
+
+    if SQL:
+        OUTPUT += f"SQL文件："
+        if type(SQL) is list:
+            for sql in SQL:
+                OUTPUT += f"{sql}; "
+            OUTPUT += "\n"
+        elif type(SQL) is str:
+            OUTPUT += f"{SQL}; \n"
+
     # for cnt, RISK in enumerate(RISK2METHOD):
     #
     #     risk = RISK["风险点"]
@@ -52,9 +153,6 @@ def summary_Method(PROBLEM_TYPE, PROJECT_SCOPE,
     #     OUTPUT += (
     #         f"\n({cnt + 2}){risk}排查：这一风险点指{desc}，我将利用业数图谱推理出“{key_data}”关键数据的来源，通过SQL脚本+API从数据中台相关数据；")
     #     #                    f"根据{policy}，这一风险点的判断逻辑是{logic}")
-
-
-
 
     return OUTPUT
 

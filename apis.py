@@ -355,8 +355,10 @@ def process_afn():
 def process_tp():
     data = request.get_json()
 
+    process_type = data.get("process_type", "")
     problem_type = data.get("problem_type", "")
     project_scope = data.get("project_scope", "")
+    problem_type_mapping = data.get("problem_type_mapping", "")
     risks = data.get("risks", [])
     risk_grounds = data.get("risk_grounds", [])
     logic = data.get("logic", "")
@@ -365,8 +367,8 @@ def process_tp():
     risk2method = data.get("risk2method", "")
     sql = data.get("sql", "")
 
-    result = summary.summary_Method(problem_type, project_scope, risks, risk_grounds, logic, process_item, service_object,
-                                    risk2method, sql)
+    result = summary.summary_Method(process_type, problem_type, project_scope, problem_type_mapping, risks, risk_grounds
+                                    , logic, process_item, service_object, risk2method, sql)
     return app.response_class(
         response=json.dumps({"result": result}, ensure_ascii=False),
         status=200,
