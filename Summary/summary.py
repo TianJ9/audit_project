@@ -115,7 +115,7 @@ def summary_Method(PROCESS_TYPE, PROBLEM_TYPE, PROJECT_SCOPE, PROBLEM_MAPPING,
             OUTPUT += f"{PROCESS_ITEM}\n"
 
     if SERVICE_OBJECT:
-        OUTPUT += f"风险点目标字段："
+        OUTPUT += f"业务对象："
         if type(SERVICE_OBJECT) is list:
             for service_object in SERVICE_OBJECT:
                 OUTPUT += f"{service_object}; "
