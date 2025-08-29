@@ -5,16 +5,24 @@ import json
 from Risk2SQL.infer_method import run_pipelines
 from Summary import summary
 from openai import OpenAI
+#
+# client = OpenAI(
+#   base_url="https://openrouter.ai/api/v1",
+#   api_key="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",
+# )
 
 client = OpenAI(
-  base_url="https://openrouter.ai/api/v1",
-  api_key="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",
+    base_url="https://api.deepseek.com",
+    api_key="sk-8d51d6ac51a54945a02d7979ef2e9e8f",
 )
+model="deepseek-chat"
+
 
 def model_gen(prompt):
     result = client.chat.completions.create(
         # model="deepseek/deepseek-r1-0528",
-        model="deepseek/deepseek-chat-v3-0324",
+        # model="deepseek/deepseek-chat-v3-0324",
+        model=model,
         messages=[
             # {"role": "system", "content": "你是一个专业的审计专家，具备审计方向的背景知识，擅长分析各种审计项目并进行异常分析和排查。"},
             {"role": "user", "content": prompt}
@@ -589,7 +597,8 @@ def process_afn():
     risks = data.get("risks", [])
     output, graph = run_pipelines(risks)
     return app.response_class(
-        response=json.dumps({"result": {"output": output, "think_graph": graph}}, ensure_ascii=False),
+        # response=json.dumps({"result": {"output": output, "think_graph": graph}}, ensure_ascii=False),
+        response=json.dumps({"result": output}, ensure_ascii=False),
         status=200,
         mimetype='application/json'
     )
@@ -598,9 +607,21 @@ def process_afn():
 @app.route('/api/task_plan', methods=['POST'])
 def process_tp():
     data = request.get_json()
+
+    process_type = data.get("process_type", "")
+    problem_type = data.get("problem_type", "")
     project_scope = data.get("project_scope", "")
+    problem_type_mapping = data.get("problem_type_mapping", "")
+    risks = data.get("risks", [])
+    risk_grounds = data.get("risk_grounds", [])
+    logic = data.get("logic", "")
+    process_item = data.get("process_item", "")
+    service_object = data.get("service_object", "")
     risk2method = data.get("risk2method", "")
-    result = summary.summary_Method(project_scope, risk2method)
+    sql = data.get("sql", "")
+
+    result = summary.summary_Method(process_type, problem_type, project_scope, problem_type_mapping, risks, risk_grounds
+                                    , logic, process_item, service_object, risk2method, sql)
     return app.response_class(
         response=json.dumps({"result": result}, ensure_ascii=False),
         status=200,
