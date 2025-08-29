@@ -46,7 +46,7 @@ def summary_Method(PROCESS_TYPE, PROBLEM_TYPE, PROJECT_SCOPE, PROBLEM_MAPPING,
         OUTPUT += "流程定位："
         if type(PROCESS_TYPE) is list:
             for process in PROCESS_TYPE:
-                OUTPUT += f"{process}; "
+                OUTPUT += f"{process} | "
             OUTPUT += "\n"
         elif type(PROCESS_TYPE) is str:
             OUTPUT += f"{PROCESS_TYPE}\n"
@@ -55,7 +55,7 @@ def summary_Method(PROCESS_TYPE, PROBLEM_TYPE, PROJECT_SCOPE, PROBLEM_MAPPING,
         OUTPUT += "问题分类："
         if type(PROBLEM_TYPE) is list:
             for type_ in PROBLEM_TYPE:
-                OUTPUT += f"{type_}; "
+                OUTPUT += f"{type_} | "
             OUTPUT += "\n"
         elif type(PROBLEM_TYPE) is str:
             OUTPUT += f"{PROBLEM_TYPE}\n"
@@ -64,7 +64,7 @@ def summary_Method(PROCESS_TYPE, PROBLEM_TYPE, PROJECT_SCOPE, PROBLEM_MAPPING,
         OUTPUT += f"项目范围："
         if type(PROJECT_SCOPE) is list:
             for project_scope in PROJECT_SCOPE:
-                OUTPUT += f"{project_scope}; "
+                OUTPUT += f"{project_scope} | "
             OUTPUT += "\n"
         elif type(PROJECT_SCOPE) is str:
             OUTPUT += f"{PROJECT_SCOPE}\n"
@@ -73,7 +73,7 @@ def summary_Method(PROCESS_TYPE, PROBLEM_TYPE, PROJECT_SCOPE, PROBLEM_MAPPING,
         OUTPUT += "问题分类映射到审计问题："
         if type(PROBLEM_MAPPING) is list:
             for mapping_ in PROBLEM_MAPPING:
-                OUTPUT += f"{mapping_}; "
+                OUTPUT += f"{mapping_} | "
             OUTPUT += "\n"
         elif type(PROBLEM_MAPPING) is str:
             OUTPUT += f"{PROBLEM_MAPPING}\n"
@@ -82,7 +82,7 @@ def summary_Method(PROCESS_TYPE, PROBLEM_TYPE, PROJECT_SCOPE, PROBLEM_MAPPING,
         OUTPUT += "风险点："
         if type(RISKS) is list:
             for risk in RISKS:
-                OUTPUT += f"{risk}; "
+                OUTPUT += f"{risk} | "
             OUTPUT += "\n"
         elif type(RISKS) is str:
             OUTPUT += f"{RISKS}\n"
@@ -91,7 +91,7 @@ def summary_Method(PROCESS_TYPE, PROBLEM_TYPE, PROJECT_SCOPE, PROBLEM_MAPPING,
         OUTPUT += "问题依据："
         if type(RISK_GROUNDS) is list:
             for risk_ground in RISK_GROUNDS:
-                OUTPUT += f"{risk_ground}; "
+                OUTPUT += f"{risk_ground} | "
             OUTPUT += "\n"
         elif type(RISK_GROUNDS) is str:
             OUTPUT += f"{RISK_GROUNDS}\n"
@@ -100,7 +100,7 @@ def summary_Method(PROCESS_TYPE, PROBLEM_TYPE, PROJECT_SCOPE, PROBLEM_MAPPING,
         OUTPUT += "判定逻辑："
         if type(LOGIC) is list:
             for logic in LOGIC:
-                OUTPUT += f"{logic}; "
+                OUTPUT += f"{logic} | "
             OUTPUT += "\n"
         elif type(LOGIC) is str:
             OUTPUT += f"{LOGIC}\n"
@@ -109,7 +109,7 @@ def summary_Method(PROCESS_TYPE, PROBLEM_TYPE, PROJECT_SCOPE, PROBLEM_MAPPING,
         OUTPUT += f"业务活动："
         if type(PROCESS_ITEM) is list:
             for process_item in PROCESS_ITEM:
-                OUTPUT += f"{process_item}; "
+                OUTPUT += f"{process_item} | "
             OUTPUT += "\n"
         elif type(PROCESS_ITEM) is str:
             OUTPUT += f"{PROCESS_ITEM}\n"
@@ -118,7 +118,7 @@ def summary_Method(PROCESS_TYPE, PROBLEM_TYPE, PROJECT_SCOPE, PROBLEM_MAPPING,
         OUTPUT += f"业务对象："
         if type(SERVICE_OBJECT) is list:
             for service_object in SERVICE_OBJECT:
-                OUTPUT += f"{service_object}; "
+                OUTPUT += f"{service_object} | "
             OUTPUT += "\n"
         elif type(SERVICE_OBJECT) is str:
             OUTPUT += f"{SERVICE_OBJECT}\n"
@@ -128,7 +128,7 @@ def summary_Method(PROCESS_TYPE, PROBLEM_TYPE, PROJECT_SCOPE, PROBLEM_MAPPING,
         OUTPUT += f"风险点目标字段："
         if type(RISK2METHOD) is list:
             for risk2method in RISK2METHOD:
-                OUTPUT += f"{risk2method}; "
+                OUTPUT += f"{risk2method} | "
             OUTPUT += "\n"
         elif type(RISK2METHOD) is str:
             OUTPUT += f"{RISK2METHOD}; \n"
@@ -137,7 +137,7 @@ def summary_Method(PROCESS_TYPE, PROBLEM_TYPE, PROJECT_SCOPE, PROBLEM_MAPPING,
         OUTPUT += f"SQL文件："
         if type(SQL) is list:
             for sql in SQL:
-                OUTPUT += f"{sql}; "
+                OUTPUT += f"{sql} | "
             OUTPUT += "\n"
         elif type(SQL) is str:
             OUTPUT += f"{SQL}; \n"
