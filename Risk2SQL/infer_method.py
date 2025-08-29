@@ -160,119 +160,120 @@ def choose_process(LOGIC):
 
 # Step3 建立图，返回图和推理路径
 # NOTE 仅为演示进行的简化实现
-def infer_graph():
-    # print("取数Step3: 读取数据并建立图谱")
-    # print("读取数据并建立图谱")
-    # TABLE_NAMES = ["PRPS", "PROJ", "BKPF", "BSEG", "CDPOS"]
+# def infer_graph():
+#     # print("取数Step3: 读取数据并建立图谱")
+#     # print("读取数据并建立图谱")
+#     # TABLE_NAMES = ["PRPS", "PROJ", "BKPF", "BSEG", "CDPOS"]
+#
+#     def remove_chinese(text: str) -> str:
+#         """去掉字符串中的所有中文字符"""
+#         if pd.isna(text):
+#             return ""
+#         return re.sub(r'[\u4e00-\u9fff]', '', str(text))
+#
+#     df1 = pd.read_excel("data/1.2.xls", sheet_name="数据表字段信息清单", header=None)
+#
+#     dict1 = {}
+#     for _, row in df1.iterrows():
+#         col4 = row[3]  # 第四列（index 从0开始，所以是3）
+#         col6 = row[5]  # 第六列（index=5）
+#         if pd.isna(col4) or pd.isna(col6):
+#             continue
+#         dict1.setdefault(col4, []).append(col6)
+#
+#     # 2. 读取 2.xlsx 的 sheet2
+#     df2 = pd.read_excel("data/GraphResult.xlsx", sheet_name="数据清单", header=None)
+#
+#     dict2 = {}
+#     # 遍历第2、3、4、6行（Excel行号，pandas index 从0开始，所以对应 index=1,2,3,5）
+#     for i in [1, 2, 3, 5]:
+#         row = df2.iloc[i]
+#         col3 = row[2]  # 第三列 (index=2)
+#         col4 = row[3]  # 第四列 (index=3)
+#
+#         if pd.isna(col3) or pd.isna(col4):
+#             continue
+#
+#         # 处理第三列：去掉 "表："
+#         key = str(col3).replace("表：", "").strip()
+#
+#         # 处理第四列：按 "、" 分割并去掉中文
+#         values = [remove_chinese(x).strip() for x in str(col4).split("、") if x.strip()]
+#         values = [v for v in values if v]  # 去掉空字符串
+#
+#         dict2[key] = values
+#
+#     # 3. 对第一个字典 dict1 进行处理
+#     result_dict = {}
+#     for key, value1 in dict1.items():
+#         if key in dict2:
+#             value2 = dict2[key]
+#             # 先保留出现在 value2 中的元素
+#             filtered = [v for v in value1 if v in value2]
+#             # 加入前五个不在 value2 中的元素
+#             extra = [v for v in value1 if v not in value2][:5]
+#             result_dict[key] = filtered + extra
+#             result_dict[key] = list(set(result_dict[key]))
+#             random.shuffle(result_dict[key])
+#         else:
+#             # del result_dict[key]
+#             # result_dict[key] = value1  # 如果 dict2 中没有该 key，则保持原样
+#             continue
+#     print(f"result_dict: {result_dict}")
+#
+#     entities = []
+#     relationships = []
+#     # 1. 表实体
+#     for table, fields in result_dict.items():
+#         entities.append({
+#             "name": table,
+#             "type": "Table"
+#         })
+#         # 2. 字段实体 + 关系
+#         for field in fields:
+#             entities.append({
+#                 "name": field,
+#                 "type": "Field"
+#             })
+#             relationships.append({
+#                 "from_entity": table,
+#                 "to_entity": field,
+#                 "relationship": "has_field"
+#             })
+#
+#     graph = {
+#         "entities": entities,
+#         "relationships": relationships
+#     }
+#
+#     # 创建图
+#     # G = nx.Graph()
+#     # # 添加节点和边
+#     # for table, fields in result_dict.items():
+#     #     G.add_node(table, type="table")  # 表节点
+#     #     for field in fields:
+#     #         G.add_node(field, type="field")  # 字段节点
+#     #         G.add_edge(table, field)  # 表 -> 字段
+#     #
+#     # # 布局
+#     # pos = nx.spring_layout(G, k=0.5, iterations=50)
+#     #
+#     # # 区分表节点和字段节点
+#     # table_nodes = [n for n, d in G.nodes(data=True) if d['type'] == 'table']
+#     # field_nodes = [n for n, d in G.nodes(data=True) if d['type'] == 'field']
+#     #
+#     # # 绘制
+#     # plt.figure(figsize=(12, 8))
+#     # nx.draw_networkx_nodes(G, pos, nodelist=table_nodes, node_color="lightblue", node_size=1000, label="Tables")
+#     # nx.draw_networkx_nodes(G, pos, nodelist=field_nodes, node_color="lightgreen", node_size=600, label="Fields")
+#     # nx.draw_networkx_edges(G, pos, alpha=0.5)
+#     # nx.draw_networkx_labels(G, pos, font_size=10)
+#     #
+#     # plt.legend()
+#     # plt.axis("off")
+#     # plt.show()
+#     return graph
 
-    def remove_chinese(text: str) -> str:
-        """去掉字符串中的所有中文字符"""
-        if pd.isna(text):
-            return ""
-        return re.sub(r'[\u4e00-\u9fff]', '', str(text))
-
-    df1 = pd.read_excel("data/1.2.xls", sheet_name="数据表字段信息清单", header=None)
-
-    dict1 = {}
-    for _, row in df1.iterrows():
-        col4 = row[3]  # 第四列（index 从0开始，所以是3）
-        col6 = row[5]  # 第六列（index=5）
-        if pd.isna(col4) or pd.isna(col6):
-            continue
-        dict1.setdefault(col4, []).append(col6)
-
-    # 2. 读取 2.xlsx 的 sheet2
-    df2 = pd.read_excel("data/GraphResult.xlsx", sheet_name="数据清单", header=None)
-
-    dict2 = {}
-    # 遍历第2、3、4、6行（Excel行号，pandas index 从0开始，所以对应 index=1,2,3,5）
-    for i in [1, 2, 3, 5]:
-        row = df2.iloc[i]
-        col3 = row[2]  # 第三列 (index=2)
-        col4 = row[3]  # 第四列 (index=3)
-
-        if pd.isna(col3) or pd.isna(col4):
-            continue
-
-        # 处理第三列：去掉 "表："
-        key = str(col3).replace("表：", "").strip()
-
-        # 处理第四列：按 "、" 分割并去掉中文
-        values = [remove_chinese(x).strip() for x in str(col4).split("、") if x.strip()]
-        values = [v for v in values if v]  # 去掉空字符串
-
-        dict2[key] = values
-
-    # 3. 对第一个字典 dict1 进行处理
-    result_dict = {}
-    for key, value1 in dict1.items():
-        if key in dict2:
-            value2 = dict2[key]
-            # 先保留出现在 value2 中的元素
-            filtered = [v for v in value1 if v in value2]
-            # 加入前五个不在 value2 中的元素
-            extra = [v for v in value1 if v not in value2][:5]
-            result_dict[key] = filtered + extra
-            result_dict[key] = list(set(result_dict[key]))
-            random.shuffle(result_dict[key])
-        else:
-            # del result_dict[key]
-            # result_dict[key] = value1  # 如果 dict2 中没有该 key，则保持原样
-            continue
-    print(f"result_dict: {result_dict}")
-
-    entities = []
-    relationships = []
-    # 1. 表实体
-    for table, fields in result_dict.items():
-        entities.append({
-            "name": table,
-            "type": "Table"
-        })
-        # 2. 字段实体 + 关系
-        for field in fields:
-            entities.append({
-                "name": field,
-                "type": "Field"
-            })
-            relationships.append({
-                "from_entity": table,
-                "to_entity": field,
-                "relationship": "has_field"
-            })
-
-    graph = {
-        "entities": entities,
-        "relationships": relationships
-    }
-
-    # 创建图
-    # G = nx.Graph()
-    # # 添加节点和边
-    # for table, fields in result_dict.items():
-    #     G.add_node(table, type="table")  # 表节点
-    #     for field in fields:
-    #         G.add_node(field, type="field")  # 字段节点
-    #         G.add_edge(table, field)  # 表 -> 字段
-    #
-    # # 布局
-    # pos = nx.spring_layout(G, k=0.5, iterations=50)
-    #
-    # # 区分表节点和字段节点
-    # table_nodes = [n for n, d in G.nodes(data=True) if d['type'] == 'table']
-    # field_nodes = [n for n, d in G.nodes(data=True) if d['type'] == 'field']
-    #
-    # # 绘制
-    # plt.figure(figsize=(12, 8))
-    # nx.draw_networkx_nodes(G, pos, nodelist=table_nodes, node_color="lightblue", node_size=1000, label="Tables")
-    # nx.draw_networkx_nodes(G, pos, nodelist=field_nodes, node_color="lightgreen", node_size=600, label="Fields")
-    # nx.draw_networkx_edges(G, pos, alpha=0.5)
-    # nx.draw_networkx_labels(G, pos, font_size=10)
-    #
-    # plt.legend()
-    # plt.axis("off")
-    # plt.show()
-    return graph
 
 # Step4 通过直接取数，完成表格对应数据的映射，获取用于生成SQL的字段
 def find_fields_by_table(table_name, target_fields):
@@ -291,9 +292,9 @@ def find_fields_by_table(table_name, target_fields):
 
     matched_rows = []
 
-    # 1. 遍历第8列，找到表名匹配的行
+    # 1. 遍历第9列，找到表名匹配的行
     for row in range(1, ws.max_row + 1):
-        cell_value = ws.cell(row=row, column=8).value
+        cell_value = ws.cell(row=row, column=9).value
         if cell_value == table_name:
             matched_rows.append(row)
 
@@ -302,15 +303,23 @@ def find_fields_by_table(table_name, target_fields):
     # 2. 遍历第9列，查找目标字段
     results = []
     for row in matched_rows:
+        table_name = ws.cell(row=row, column=3).value.replace("表：", "").strip()
+        if "/" in table_name:
+            table_names = table_name.split("/")
+        else:
+            table_names = [table_name]
+
         cell_value = ws.cell(row=row, column=9).value
         if cell_value is None:
             continue
         for field in target_fields:
-            if field in str(cell_value):  # 包含匹配
-                results.append({
-                    "目标字段": field,
-                    "整单元格内容": cell_value
-                })
+            for table_name in table_names:
+                if field in str(cell_value):  # 包含匹配
+                    results.append({
+                        "表名": table_name,
+                        "目标字段": field,
+                        "整单元格内容": cell_value
+                    })
 
     # 3. 输出结果
     filtered = []
@@ -324,12 +333,13 @@ def find_fields_by_table(table_name, target_fields):
 
 
 # Step5 生成SQL
-def generate_SQL(risk, target_fields, key_fields):
+def generate_SQL(risk, target_fields, key_fields, table_name):
     # print("取数Step5:
     print("生成SQL文件")
     PROMPT_TEMPLATE = '''
     根据关键字段和目标字段，仿照下面的SQL脚本的格式，写一个取数脚本，只返回脚本
-    
+    表名：
+    {table_name}
     关键字段：
     {key_fields}
     目标字段：
@@ -400,7 +410,7 @@ def generate_SQL(risk, target_fields, key_fields):
     ;
     '''
 
-    prompt = PROMPT_TEMPLATE.format(key_fields=key_fields, target_fields=target_fields)
+    prompt = PROMPT_TEMPLATE.format(key_fields=key_fields, target_fields=target_fields, table_name=table_name)
     while True:
         try:
             response = model_gen(prompt)
@@ -442,9 +452,10 @@ def pipeline(risk):
             target_fields_for_sql = find_fields_by_table(table_name, chosen_fields)
 
             for instance in target_fields_for_sql:
+                table_name = instance["表名"]
                 target_fields = instance["目标字段"]
                 key_fields = instance["整单元格内容"]
-                SQL = generate_SQL(risk, target_fields, key_fields)
+                SQL = generate_SQL(risk, target_fields, key_fields, table_name)
                 epoch["SQL"] = SQL
                 output.append(epoch)
 
@@ -470,8 +481,8 @@ def main():
 
     for risk in risks:
         output.extend(pipeline(risk))
-    with open("graph.json", "w", encoding="utf-8") as f:
-        json.dump(graph_dict, f, ensure_ascii=False, indent=4)
+    # with open("graph.json", "w", encoding="utf-8") as f:
+    #     json.dump(graph_dict, f, ensure_ascii=False, indent=4)
     with open(f"{model}.json", "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=4)
 
